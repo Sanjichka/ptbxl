@@ -1,4 +1,38 @@
-2. Create one table for diagnoses:
+1. Extended dataset by diagnoses and age categories
+WITH DiagnosisAggregated AS (
+  SELECT
+    ecg_id,
+    STRING_AGG(diagnose, ', ' ORDER BY diagnose ASC) AS diagnoses
+  FROM (
+    SELECT
+      ecg_id,
+      REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") AS diagnose,
+      CAST(CAST(REGEXP_EXTRACT(pair, r":\s*([0-9.]+)") AS FLOAT64) AS INT64) AS value
+    FROM
+      `ptb-xl-458415.ptbxl_data.ptbxl`,
+      UNNEST(SPLIT(TRIM(scp_codes, '{}'), ',')) AS pair
+  )
+  WHERE value >= 50
+  GROUP BY ecg_id
+)
+
+SELECT 
+  t.*,
+  CASE
+    WHEN age = 0 OR age IS NULL THEN 'No data'
+    WHEN age <= 18 THEN '0-18'
+    WHEN age <= 39 THEN '19-39'
+    WHEN age <= 59 THEN '40-59'
+    WHEN age <= 69 THEN '60-69'
+    WHEN age >= 70 THEN '70+'
+  END AS age_category,
+  d.diagnoses
+
+FROM `ptb-xl-458415.ptbxl_data.ptbxl` AS t
+LEFT JOIN DiagnosisAggregated AS d ON t.ecg_id = d.ecg_id
+------------------------------------------------------------------------------------------
+
+2. Create one table for diagnoses/rhythms + :
 SELECT
   patient_id,
   ecg_id,
@@ -12,8 +46,17 @@ SELECT
     when age <= 59 then '40-59'
     when age <= 69 then '60-69'
     when age >= 70 then '70+'
-  end as age_category
-  
+  end as age_category,
+  CASE 
+    WHEN REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") = 'NORM' THEN 'Normal'
+    WHEN REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") IN ('IMI', 'ASMI', 'ALMI', 'LMI', 'AMI', 'PMI') THEN 'Myocardial Infarction'
+    WHEN REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") IN ('STTC', 'NST_', 'ISC_', 'ISCI', 'ISCAS', 'ISCLA') THEN 'ST/T Changes'
+    WHEN REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") IN ('CLBBB', 'CRBBB', 'ILBBB', 'IRBBB', 'IVCD', 'LAFB') THEN 'Conduction Disturbance'
+    WHEN REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") IN ('LVH', 'RVH', 'SEHYP') THEN 'Hypertrophy'
+    ELSE 'Other/Rhythm'
+  END AS superclass
+
 FROM
   `ptb-xl-458415.ptbxl_data.ptbxl`,
   UNNEST(SPLIT(TRIM(scp_codes, '{}'), ',')) AS pair
+where CAST(CAST(REGEXP_EXTRACT(pair, r":\s*([0-9.]+)") AS FLOAT64) AS INT64) >= 50
