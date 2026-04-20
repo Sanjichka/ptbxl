@@ -1,0 +1,19 @@
+2. Create one table for diagnoses:
+SELECT
+  patient_id,
+  ecg_id,
+  recording_date,
+  REGEXP_EXTRACT(pair, r"'?([^':\s{]+)'?\s*:") AS diagnose,
+  CAST(CAST(REGEXP_EXTRACT(pair, r":\s*([0-9.]+)") AS FLOAT64) AS INT64) AS value,
+  case
+    when age = 0 or age is null then 'No data'
+    when age <= 18 then '0-18'
+    when age <= 39 then '19-39'
+    when age <= 59 then '40-59'
+    when age <= 69 then '60-69'
+    when age >= 70 then '70+'
+  end as age_category
+  
+FROM
+  `ptb-xl-458415.ptbxl_data.ptbxl`,
+  UNNEST(SPLIT(TRIM(scp_codes, '{}'), ',')) AS pair
