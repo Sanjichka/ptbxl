@@ -1,4 +1,4 @@
-**Jupyter Notebook - Precleaning & preprocessing the data**
+** Jupyter Notebook - Precleaning & preprocessing the data **
 
 1. Data Exploration and Initial Assessment
 
