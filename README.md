@@ -38,4 +38,6 @@ To enhance clinical insights, I expand the dataset with custom dimensions:
 
 📈 3. Clinical Superclass Mapping
 
-I generate specialized tables that simplify complex medical codes into intuitive categories:Data Unnesting: I transform nested SCP codes into a flat structure via UNNEST and SPLIT for better compatibility with visualization tools.Superclass Logic: Individual diagnoses are mapped into high-level clinical groups like Myocardial Infarction, Conduction Disturbance, and Hypertrophy, making the data accessible for non-technical stakeholders.
+I generate specialized tables that simplify complex medical codes into intuitive categories:
+- Data Unnesting: I transform nested SCP codes into a flat structure via UNNEST and SPLIT for better compatibility with visualization tools.
+- Superclass Logic: Individual diagnoses are mapped into high-level clinical groups like Myocardial Infarction, Conduction Disturbance, and Hypertrophy, making the data accessible for non-technical stakeholders.
