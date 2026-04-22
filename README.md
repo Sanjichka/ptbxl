@@ -28,12 +28,14 @@ The final stage is the automated migration to Google Cloud Platform (GCP). After
 
 📊 1. SQL Transformation & Feature Engineering
 
-Once the data is migrated to the cloud, I use BigQuery SQL to perform advanced feature engineering, creating final datasets optimized for BI dashboards and deep analytical queries.
+Once the data is migrated to the cloud, I use BigQuery SQL to finalize the data processing, creating final datasets optimized for BI dashboards and deep analytical queries.
 
-🧬 7. Diagnosis Aggregation & Demographic Stratification
+🧬 2. Diagnosis Aggregation & Demographic Stratification
 
-To enhance clinical insights, I expand the dataset with custom dimensions:Automated Parsing: Using Regex and CTEs, I extract diagnoses from encoded strings where the confidence value is $\ge 50$ and aggregate them into a readable format.Age Categorization: I implement CASE logic to stratify patients into demographic groups (e.g., 19-39, 40-59), enabling seamless filtering and cohort analysis within the dashboard.
+To enhance clinical insights, I expand the dataset with custom dimensions:
+- Automated Parsing: Using Regex and CTEs, I extract diagnoses from encoded strings where the confidence value is $\ge 50$ and aggregate them into a readable format.
+- Age Categorization: I implement CASE logic to stratify patients into demographic groups (e.g., 19-39, 40-59), enabling seamless filtering and cohort analysis within the dashboard.
 
-📈 8. Clinical Superclass Mapping
+📈 3. Clinical Superclass Mapping
 
 I generate specialized tables that simplify complex medical codes into intuitive categories:Data Unnesting: I transform nested SCP codes into a flat structure via UNNEST and SPLIT for better compatibility with visualization tools.Superclass Logic: Individual diagnoses are mapped into high-level clinical groups like Myocardial Infarction, Conduction Disturbance, and Hypertrophy, making the data accessible for non-technical stakeholders.
