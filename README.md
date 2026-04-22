@@ -1,5 +1,5 @@
-__Jupyter Notebook - Precleaning & preprocessing the data__
-
+**__Jupyter Notebook - Precleaning & preprocessing the data__
+**
 1. Data Exploration and Initial Assessment
 
 The process begins with the ingestion of the PTB-XL dataset. I conduct a "health check" of the raw data, look at the shape of the dataframe and the presence of null values, analyze the frequency and unique counts of variables, understand the columns and the data they represent.
